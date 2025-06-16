@@ -41,59 +41,55 @@ const DateTimePicker = ({ value, onChange }) => {
 
   return (
     <div className="space-y-4">
-      <Label className="text-sm font-medium text-gray-700">
-        Preferred Meeting Date & Time *
+      <Label className="text-sm font-medium text-white">
+        Preferred Meeting Date
       </Label>
       
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="space-y-4">
         {/* Date Picker */}
-        <div className="space-y-2">
-          <Label className="text-xs text-gray-600">Select Date</Label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className={cn(
-                  "w-full h-12 justify-start text-left font-normal rounded-xl border-gray-200 hover:border-blue-500 transition-all duration-200",
-                  !date && "text-muted-foreground"
-                )}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {date ? format(date, "PPP") : <span>Pick a date</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                mode="single"
-                selected={date}
-                onSelect={handleDateChange}
-                disabled={(date) => date < new Date() || date.getDay() === 0 || date.getDay() === 6}
-                initialFocus
-                className="p-3 pointer-events-auto"
-              />
-            </PopoverContent>
-          </Popover>
-        </div>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className={cn(
+                "w-full h-12 justify-start text-left font-normal rounded-xl bg-white/10 border-white/20 text-white hover:bg-white/15 hover:border-blue-400 transition-all duration-200",
+                !date && "text-blue-200"
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {date ? format(date, "PPP") : <span>Pick a date for our consultation</span>}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0 bg-slate-800 border-slate-600" align="start">
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={handleDateChange}
+              disabled={(date) => date < new Date() || date.getDay() === 0 || date.getDay() === 6}
+              initialFocus
+              className="p-3 pointer-events-auto text-white"
+            />
+          </PopoverContent>
+        </Popover>
 
-        {/* Time Picker */}
-        <div className="space-y-2">
-          <Label className="text-xs text-gray-600">Select Time</Label>
+        {/* Time Picker - only show if date is selected */}
+        {date && (
           <Select value={time} onValueChange={handleTimeChange}>
-            <SelectTrigger className="h-12 rounded-xl border-gray-200 hover:border-blue-500 transition-all duration-200">
-              <SelectValue placeholder="Choose time" />
+            <SelectTrigger className="h-12 rounded-xl bg-white/10 border-white/20 text-white hover:border-blue-400 transition-all duration-200">
+              <SelectValue placeholder="Choose a time" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-slate-800 border-slate-600">
               {timeSlots.map((slot) => (
-                <SelectItem key={slot.value} value={slot.value}>
+                <SelectItem key={slot.value} value={slot.value} className="text-white hover:bg-slate-700">
                   {slot.label}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
-        </div>
+        )}
       </div>
       
-      <p className="text-xs text-gray-500">
+      <p className="text-xs text-blue-200">
         Available Monday-Friday, 9:00 AM - 5:30 PM (EST)
       </p>
     </div>
