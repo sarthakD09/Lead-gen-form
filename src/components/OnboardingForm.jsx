@@ -26,11 +26,70 @@ const OnboardingForm = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Here you would typically send the data to your backend
-  };
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+    const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+    // Convert meetingDateTime to Date if it's a string
+   let meetingDateTime = formData.meetingDateTime;
+let meetingDateTimeISO = null;
+
+  if (meetingDateTime) {
+  // If it's a string, try to convert to Date
+  if (typeof meetingDateTime === "string") {
+    const dateObj = new Date(meetingDateTime);
+    // Check if dateObj is a valid date
+    if (!isNaN(dateObj.getTime())) {
+      meetingDateTimeISO = dateObj.toISOString();
+    }
+  } else if (meetingDateTime instanceof Date && !isNaN(meetingDateTime.getTime())) {
+    meetingDateTimeISO = meetingDateTime.toISOString();
+  }
+}
+    const payload = {
+      client_name: formData.fullName,
+      email_address: formData.email,
+      contacts: { phone: formData.phone }, // as JSONB
+      business: formData.businessName,
+      key_challenges: formData.currentChallenge,
+      onboarding_details: formData.businessDescription,
+      lead_handlings: { meetingDateTime: meetingDateTimeISO  }, // JSONB
+      status: 'new', // optional: add default status
+    };
+
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/clients`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to submit form');
+    }
+
+    alert('Form submitted successfully!');
+    setFormData({
+      fullName: '',
+      email: '',
+      phone: '',
+      businessName: '',
+      businessDescription: '',
+      currentChallenge: '',
+      meetingDateTime: null
+    });
+
+  } catch (error) {
+    console.error('Submission error:', error.message);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 py-8 px-4">
