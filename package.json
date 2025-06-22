@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://sarthakD09.github.io/EVOLVYN-LEAD-CAPTURE-FORM",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -12,7 +13,6 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
-  "homepage": "https://Swaraj-kubde.github.io/evolvyn-lead-capture-form",
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
     "@radix-ui/react-accordion": "^1.2.0",

@@ -1,6 +1,6 @@
 
-import React, { useState } from 'react';
-import { Calendar, User, Mail, Phone, Building, MessageSquare, Clock, ChevronRight, Zap, Settings, Shield } from 'lucide-react';
+import { useState } from 'react';
+import { Zap, Settings, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -33,32 +33,26 @@ const handleSubmit = async (e) => {
     const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
     const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-    // Convert meetingDateTime to Date if it's a string
-   let meetingDateTime = formData.meetingDateTime;
+// Convert meetingDateTime to ISO string if valid
 let meetingDateTimeISO = null;
-
-  if (meetingDateTime) {
-  // If it's a string, try to convert to Date
-  if (typeof meetingDateTime === "string") {
-    const dateObj = new Date(meetingDateTime);
-    // Check if dateObj is a valid date
-    if (!isNaN(dateObj.getTime())) {
-      meetingDateTimeISO = dateObj.toISOString();
-    }
-  } else if (meetingDateTime instanceof Date && !isNaN(meetingDateTime.getTime())) {
-    meetingDateTimeISO = meetingDateTime.toISOString();
+if (formData.meetingDateTime) {
+  const dateObj = new Date(formData.meetingDateTime);
+  if (!isNaN(dateObj.getTime())) {
+    meetingDateTimeISO = dateObj.toISOString();
   }
 }
-    const payload = {
-      client_name: formData.fullName,
-      email_address: formData.email,
-      contacts: { phone: formData.phone }, // as JSONB
-      business: formData.businessName,
-      key_challenges: formData.currentChallenge,
-      onboarding_details: formData.businessDescription,
-      lead_handlings: { meetingDateTime: meetingDateTimeISO  }, // JSONB
-      status: 'new', // optional: add default status
-    };
+
+const payload = {
+  client_name: formData.fullName,
+  email_address: formData.email,
+  contacts: { phone: formData.phone }, // as JSONB
+  business: formData.businessName,
+  key_challenges: formData.currentChallenge,
+  onboarding_details: formData.businessDescription,
+  meeting_time: meetingDateTimeISO, // JSONB
+  status: 'new', // optional: add default status
+  created_at: new Date().toISOString(),
+};
 
     const response = await fetch(`${SUPABASE_URL}/rest/v1/clients`, {
       method: 'POST',
@@ -260,7 +254,7 @@ let meetingDateTimeISO = null;
         {/* Footer */}
         <div className="text-center mt-12 text-blue-300">
           <p className="text-sm">
-            © 2024 Evolvyn. Transforming businesses through intelligent automation.
+            © 2025 Evolvyn. Transforming businesses through intelligent automation.
           </p>
         </div>
       </div>
