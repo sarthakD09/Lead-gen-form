@@ -8,7 +8,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default defineConfig(({ mode }) => ({
-  base: '/Lead-gen-form/',
   server: {
     host: "::",
     port: 8080,
